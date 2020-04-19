@@ -12,6 +12,9 @@ public class HandCursor : MonoBehaviour
 
     int layer_mask;
 
+    private bool grabbing = false;
+    private TargetJoint2D grab_joint;
+
     void Awake()
     {
         Cursor.visible = false;
@@ -30,14 +33,34 @@ public class HandCursor : MonoBehaviour
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position = pos;
 
-        Collider2D col = Physics2D.OverlapCircle(pos, 0.3f, layer_mask);
-        if (col)
+        if (grabbing)
         {
-            sprite_renderer.sprite = hover_hand;
+            sprite_renderer.sprite = closed_hand;
+            grab_joint.target = transform.position;
+            if (Input.GetMouseButtonUp(0))
+            {
+                grabbing = false;
+                Destroy(grab_joint);
+            }
         }
         else
         {
-            sprite_renderer.sprite = default_hand;
+            Collider2D col = Physics2D.OverlapCircle(pos, 0.3f, layer_mask);
+            if (col)
+            {
+                if (Input.GetMouseButtonDown(0) && !grabbing)
+                {
+                    grabbing = true;
+                    grab_joint = col.gameObject.AddComponent<TargetJoint2D>();
+                    grab_joint.frequency = 20;
+                }
+                else
+                    sprite_renderer.sprite = hover_hand;
+            }
+            else
+            {
+                sprite_renderer.sprite = default_hand;
+            }
         }
     }
 }

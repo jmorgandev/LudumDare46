@@ -10,17 +10,36 @@ public class CameraControls : MonoBehaviour
     private const float camera_speed = 20.0f;
     private const float camera_max_speed = 5.0f;
 
+    private Vector2 bounds_min;
+    private Vector2 bounds_max;
 
     private Vector3 velocity;
     private Vector3 acceleration;
 
     private int scroll_edge_thickness = 0;
 
-    void Start()
+    private void Awake()
     {
         scroll_edge_thickness = (int)((float)Screen.height * scroll_edge_factor);
         velocity = Vector3.zero;
         acceleration = Vector3.zero;
+    }
+
+    void Start()
+    {
+        float vertical_extent = GetComponent<Camera>().orthographicSize;
+        float horizontal_extent = vertical_extent * GetComponent<Camera>().aspect;
+        BoxCollider2D collider = GameObject.Find("CameraBounds").GetComponent<BoxCollider2D>();
+        Vector2 collider_origin = new Vector2(collider.transform.position.x, collider.transform.position.y) + collider.offset;
+
+        bounds_min = collider_origin - (collider.size * 0.5f);
+        bounds_max = collider_origin + (collider.size * 0.5f);
+
+        bounds_min.y += vertical_extent;
+        bounds_max.y -= vertical_extent;
+
+        bounds_min.x += horizontal_extent;
+        bounds_max.x -= horizontal_extent;
     }
 
     void DoScreenEdgeMovement()
@@ -53,8 +72,11 @@ public class CameraControls : MonoBehaviour
         // Directional buttons override the edge scrolling
         if (!DoDirectionButtonMovement())
             DoScreenEdgeMovement();
+    }
 
-
+    Vector3 ClipToBounds(Vector3 v, Vector2 min, Vector2 max)
+    {
+        return new Vector3(Mathf.Clamp(v.x, min.x, max.x), Mathf.Clamp(v.y, min.y, max.y), v.z);
     }
 
     void FixedUpdate()
@@ -63,7 +85,6 @@ public class CameraControls : MonoBehaviour
                                                        velocity * dampening;
 
         transform.Translate(velocity * Time.fixedDeltaTime);
-
-        Debug.Log(velocity);
+        transform.position = ClipToBounds(transform.position, bounds_min, bounds_max);
     }
 }

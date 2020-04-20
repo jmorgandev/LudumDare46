@@ -7,11 +7,6 @@ public class Fire : MonoBehaviour
     private Animator fire_animator;
     private Animator fuel_animator;
 
-    public int Health
-    { 
-        get { return fire_health; }
-        set { fire_health = value; }
-    }
     private int fire_health;
 
     // Start is called before the first frame update
@@ -33,9 +28,21 @@ public class Fire : MonoBehaviour
 
     private void doHealth()
     {
-        fire_health++;
-        fire_health = Mathf.Min(fire_health, 7);
+        fire_health = Mathf.Min(fire_health + 1, 10);
         Debug.Log(fire_health);
+
+        if (fire_health >= 0 && fire_health < 4)
+        {
+            fire_animator.SetInteger("stage", 0);
+        }
+        else if (fire_health >= 4 && fire_health < 8)
+        {
+            fire_animator.SetInteger("stage", 1);
+        }
+        else if (fire_health >= 8)
+        {
+            fire_animator.SetInteger("stage", 2);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D col)

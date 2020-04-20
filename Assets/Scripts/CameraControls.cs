@@ -18,6 +18,8 @@ public class CameraControls : MonoBehaviour
 
     private int scroll_edge_thickness = 0;
 
+    Renderer fader;
+
     private void Awake()
     {
         scroll_edge_thickness = (int)((float)Screen.height * scroll_edge_factor);
@@ -32,6 +34,12 @@ public class CameraControls : MonoBehaviour
         BoxCollider2D collider = GameObject.Find("CameraBounds").GetComponent<BoxCollider2D>();
         Vector2 collider_origin = new Vector2(collider.transform.position.x, collider.transform.position.y) + collider.offset;
 
+        fader = transform.GetChild(0).GetComponent<Renderer>();
+
+        Color c = fader.material.color;
+        c.a = 1.3f;
+        fader.material.color = c;
+
         bounds_min = collider_origin - (collider.size * 0.5f);
         bounds_max = collider_origin + (collider.size * 0.5f);
 
@@ -44,6 +52,8 @@ public class CameraControls : MonoBehaviour
 
     void Update()
     {
+        fader.material.color = new Color(fader.material.color.r, fader.material.color.g, fader.material.color.b,
+                                         Mathf.Max(fader.material.color.a - (0.6f * Time.deltaTime), 0f));
         acceleration.Set(0f, 0f, 0f);
 
         // Directional buttons override the edge scrolling

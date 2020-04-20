@@ -5,7 +5,9 @@ using UnityEngine;
 public class Fire : MonoBehaviour
 {
     private Animator fire_animator;
-    private Animator fuel_animator;
+    private SpriteRenderer fuel_renderer;
+
+    public Sprite[] fuel_frames;
 
     private CircleCollider2D item_area;
 
@@ -15,7 +17,8 @@ public class Fire : MonoBehaviour
     void Start()
     {
         fire_animator = transform.Find("FireSprite").GetComponent<Animator>();
-        fuel_animator = transform.Find("FuelSprite").GetComponent<Animator>();
+        fuel_renderer = transform.Find("FuelSprite").GetComponent<SpriteRenderer>();
+
         item_area = GetComponent<CircleCollider2D>();
 
         Debug.Log(fire_health);
@@ -31,6 +34,8 @@ public class Fire : MonoBehaviour
 
     private void UpdateHealthEffects()
     {
+        fuel_renderer.sprite = fuel_frames[Mathf.Min(fire_health, fuel_frames.Length - 1)];
+
         if (fire_health >= 0 && fire_health < 4)
         {
             fire_animator.SetInteger("stage", 0);

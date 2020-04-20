@@ -42,36 +42,40 @@ public class CameraControls : MonoBehaviour
         bounds_max.x -= horizontal_extent;
     }
 
-    void DoScreenEdgeMovement()
-    {
-        float x_accel = 0f, y_accel = 0f;
-
-        if (Input.mousePosition.x >= Screen.width - scroll_edge_thickness && Input.mousePosition.x <= Screen.width)
-            x_accel = camera_speed;
-        else if (Input.mousePosition.x <= scroll_edge_thickness && Input.mousePosition.x >= 0)
-            x_accel = -camera_speed;
-
-        if (Input.mousePosition.y >= Screen.height - scroll_edge_thickness && Input.mousePosition.y <= Screen.height)
-            y_accel = camera_speed;
-        else if (Input.mousePosition.y <= scroll_edge_thickness && Input.mousePosition.y >= 0)
-            y_accel = -camera_speed;
-
-        acceleration.Set(x_accel, y_accel, 0f);
-    }
-
-    // Return true if any directional buttons were pressed
-    bool DoDirectionButtonMovement()
-    {
-        return false;
-    }
-
     void Update()
     {
         acceleration.Set(0f, 0f, 0f);
-            
+
         // Directional buttons override the edge scrolling
-        if (!DoDirectionButtonMovement())
-            DoScreenEdgeMovement();
+        float x_accel = 0f, y_accel = 0f;
+
+        float x_axis = Input.GetAxis("Horizontal");
+        float y_axis = Input.GetAxis("Vertical");
+        if (x_axis != 0f)
+        {
+            x_accel = camera_speed * x_axis;
+        }
+        else
+        {
+            if (Input.mousePosition.x >= Screen.width - scroll_edge_thickness && Input.mousePosition.x <= Screen.width)
+                x_accel = camera_speed;
+            else if (Input.mousePosition.x <= scroll_edge_thickness && Input.mousePosition.x >= 0)
+                x_accel = -camera_speed;
+        }
+
+        if (y_axis != 0f)
+        {
+            y_accel = camera_speed * y_axis;
+        }
+        else
+        {
+            if (Input.mousePosition.y >= Screen.height - scroll_edge_thickness && Input.mousePosition.y <= Screen.height)
+                y_accel = camera_speed;
+            else if (Input.mousePosition.y <= scroll_edge_thickness && Input.mousePosition.y >= 0)
+                y_accel = -camera_speed;
+        }
+
+        acceleration.Set(x_accel, y_accel, 0f);
     }
 
     Vector3 ClipToBounds(Vector3 v, Vector2 min, Vector2 max)

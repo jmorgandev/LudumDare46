@@ -13,6 +13,8 @@ public class Fire : MonoBehaviour
 
     private int fire_health;
 
+    private string current_fuel_tag;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,9 +23,7 @@ public class Fire : MonoBehaviour
 
         item_area = GetComponent<CircleCollider2D>();
 
-        Debug.Log(fire_health);
         UpdateHealthEffects();
-        InvokeRepeating("doHealth", 2f, 2f);
     }
 
     // Update is called once per frame
@@ -40,16 +40,19 @@ public class Fire : MonoBehaviour
         {
             fire_animator.SetInteger("stage", 0);
             item_area.radius = 0.6f;
+            current_fuel_tag = "sticks";
         }
         else if (fire_health >= 4 && fire_health < 8)
         {
             fire_animator.SetInteger("stage", 1);
             item_area.radius = 0.95f;
+            current_fuel_tag = "logs";
         }
         else if (fire_health >= 8)
         {
             fire_animator.SetInteger("stage", 2);
             item_area.radius = 1.25f;
+            current_fuel_tag = "logs";
         }
     }
 
@@ -63,6 +66,14 @@ public class Fire : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        
+        if (col.tag == current_fuel_tag)
+        {
+            col.SendMessage("OnConsume");
+            doHealth();
+        }
+        else
+        {
+            Debug.Log(col.tag + " | nope");
+        }
     }
 }

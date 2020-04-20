@@ -46,14 +46,14 @@ public class CameraControls : MonoBehaviour
     {
         float x_accel = 0f, y_accel = 0f;
 
-        if (Input.mousePosition.x >= Screen.width - scroll_edge_thickness && Input.mousePosition.x <= Screen.width + scroll_edge_thickness)
+        if (Input.mousePosition.x >= Screen.width - scroll_edge_thickness && Input.mousePosition.x <= Screen.width)
             x_accel = camera_speed;
-        else if (Input.mousePosition.x <= scroll_edge_thickness && Input.mousePosition.x >= -scroll_edge_thickness)
+        else if (Input.mousePosition.x <= scroll_edge_thickness && Input.mousePosition.x >= 0)
             x_accel = -camera_speed;
 
-        if (Input.mousePosition.y >= Screen.height - scroll_edge_thickness && Input.mousePosition.y <= Screen.height + scroll_edge_thickness)
+        if (Input.mousePosition.y >= Screen.height - scroll_edge_thickness && Input.mousePosition.y <= Screen.height)
             y_accel = camera_speed;
-        else if (Input.mousePosition.y <= scroll_edge_thickness && Input.mousePosition.y >= -scroll_edge_thickness)
+        else if (Input.mousePosition.y <= scroll_edge_thickness && Input.mousePosition.y >= 0)
             y_accel = -camera_speed;
 
         acceleration.Set(x_accel, y_accel, 0f);

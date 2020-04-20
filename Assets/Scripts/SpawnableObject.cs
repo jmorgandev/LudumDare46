@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class SpawnableObject : MonoBehaviour
 {
+    public float respawn_time = 5f;
+
     private Vector3 spawn_position;
     private float spawn_angle;
 
@@ -12,7 +14,7 @@ public class SpawnableObject : MonoBehaviour
     {
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         spawn_position = transform.position;
-        spawn_angle = transform.rotation.z;
+        spawn_angle = transform.rotation.eulerAngles.z;
     }
 
     private void Update()
@@ -25,9 +27,31 @@ public class SpawnableObject : MonoBehaviour
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    IEnumerator Respawn(float respawn_time)
     {
-        
+        GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        GetComponent<Collider2D>().enabled = false;
+        GetComponent<Renderer>().enabled = false;
+        transform.position = spawn_position;
+        transform.rotation.eulerAngles.Set(0, 0, spawn_angle);
+        yield return new WaitForSeconds(respawn_time);
+        GetComponent<Renderer>().enabled = true;
+        GetComponent<Collider2D>().enabled = true;
+    }
+
+    public void OnConsume()
+    {
+        StartCoroutine(Respawn(respawn_time));
+    }
+
+    public void OnReject()
+    {
+
+    }
+
+    public void OnBurn()
+    {
+
     }
 }
 

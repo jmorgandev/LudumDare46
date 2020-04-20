@@ -68,7 +68,7 @@ public class Fire : MonoBehaviour
     {
         if (col.tag == current_fuel_tag)
         {
-            Debug.Log(col.tag + " | yep");
+            col.SendMessage("OnConsume");
             doHealth();
         }
         else

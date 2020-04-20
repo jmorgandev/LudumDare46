@@ -247,7 +247,7 @@ PrefabInstance:
     - target: {fileID: 7952355345620117156, guid: 5bcbcdb0264b98b46b676b4a15a45ff9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 7952355345620117156, guid: 5bcbcdb0264b98b46b676b4a15a45ff9,
         type: 3}
@@ -602,6 +602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01e7f8d7c9a8ab4db797d72947dc363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawn_time: 5
 --- !u!50 &1477088486
 Rigidbody2D:
   serializedVersion: 4
@@ -670,6 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01e7f8d7c9a8ab4db797d72947dc363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawn_time: 5
 --- !u!50 &1968359416
 Rigidbody2D:
   serializedVersion: 4

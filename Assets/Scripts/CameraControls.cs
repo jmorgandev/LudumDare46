@@ -49,11 +49,13 @@ public class CameraControls : MonoBehaviour
         // Directional buttons override the edge scrolling
         float x_accel = 0f, y_accel = 0f;
 
-        float x_axis = Input.GetAxis("Horizontal");
-        float y_axis = Input.GetAxis("Vertical");
-        if (x_axis != 0f)
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            x_accel = camera_speed * x_axis;
+            x_accel = -camera_speed;
+        }
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            x_accel = camera_speed;
         }
         else
         {
@@ -63,9 +65,13 @@ public class CameraControls : MonoBehaviour
                 x_accel = -camera_speed;
         }
 
-        if (y_axis != 0f)
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            y_accel = camera_speed * y_axis;
+            y_accel = camera_speed;
+        }
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            y_accel = -camera_speed;
         }
         else
         {
@@ -89,6 +95,13 @@ public class CameraControls : MonoBehaviour
                                                        velocity * dampening;
 
         transform.Translate(velocity * Time.fixedDeltaTime);
+
+        if (transform.position.x >= bounds_max.x || transform.position.x <= bounds_min.x)
+            velocity.x = 0f;
+
+        if (transform.position.y >= bounds_max.y || transform.position.y <= bounds_min.y)
+            velocity.y = 0f;
+
         transform.position = ClipToBounds(transform.position, bounds_min, bounds_max);
     }
 }

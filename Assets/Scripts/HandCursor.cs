@@ -33,7 +33,6 @@ public class HandCursor : MonoBehaviour
 
         if (grabbing)
         {
-            Debug.Log(Physics2D.LinecastAll(pos, grabbed_object.transform.position).Length);
             if (Input.GetMouseButtonUp(0) || Physics2D.LinecastAll(pos, grabbed_object.transform.position, grab_layer_mask).Length > 1)
             {
                 grabbing = false;

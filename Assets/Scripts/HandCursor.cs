@@ -29,7 +29,7 @@ public class HandCursor : MonoBehaviour
     void Update()
     {
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = pos;
+        transform.position = new Vector3(pos.x, pos.y, transform.position.z);
 
         if (grabbing)
         {
@@ -55,6 +55,7 @@ public class HandCursor : MonoBehaviour
                 {
                     grabbing = true;
                     grabbed_object = col.gameObject;
+                    grabbed_object.SendMessage("OnGrab");
                     grab_joint = grabbed_object.AddComponent<TargetJoint2D>();
                     grab_joint.frequency = 10;
                 }
